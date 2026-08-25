@@ -10,8 +10,8 @@ class Bladeworks < Formula
 
   desc "Render portable Final Cut Pro XML projects to video"
   homepage "https://github.com/bladeworks-ai/bladeworks"
-  url "https://files.pythonhosted.org/packages/d1/ba/e2b2a31c33ef50760cb471cbaa4f6cac37afad3e46ebe3d2d33a17356586/bladeworks-0.1.3.tar.gz"
-  sha256 "6a3c31bb4b0b48221f9d3978198cb8962ced3131b40f5cdf3f6cb6dcfb07d3d4"
+  url "https://files.pythonhosted.org/packages/07/ec/9c392032b46bdcc071495d1bf0612f795ed423ac1cc37528c3a6217016ab/bladeworks-0.1.4.tar.gz"
+  sha256 "d43812f3847b92dda19de7a53f0f224db522375562d3bf7235bf61ea7d69e882"
   license "AGPL-3.0-only"
 
   depends_on arch: :arm64
