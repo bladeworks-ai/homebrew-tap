@@ -4,7 +4,7 @@
 #   Homebrew native libraries + pinned Apple Silicon Python wheels
 #       -> isolated Python 3.12 virtual environment
 #       -> Bladeworks installed without network dependency resolution
-#       -> doctor verifies ffprobe, Pillow, and RAQM before release
+#       -> formula tests verify ffprobe, Pillow, and RAQM before release
 class Bladeworks < Formula
   include Language::Python::Virtualenv
 
@@ -19,6 +19,7 @@ class Bladeworks < Formula
   depends_on "fribidi"
   depends_on "harfbuzz"
   depends_on "libraqm"
+  depends_on macos: :sonoma
   depends_on "python@3.12"
 
   resource "torch" do
@@ -218,14 +219,19 @@ class Bladeworks < Formula
 
   def install
     venv = virtualenv_create(libexec, "python3.12")
-    venv.pip_install resources.map(&:cached_download)
+    resources.each do |resource|
+      resource.stage do
+        wheel = Pathname.pwd/resource.downloader.basename
+        venv.pip_install wheel
+      end
+    end
     venv.pip_install_and_link buildpath, build_isolation: false
   end
 
   test do
     output = shell_output("#{bin}/bladeworks doctor")
     assert_match "ffprobe: OK (#{formula_opt_bin("ffmpeg")}/ffprobe)", output
-    assert_match "Pillow: 12.2.0", output
-    assert_match "RAQM: OK", output
+    assert_equal "12.2.0", shell_output("#{libexec}/bin/python -c 'import PIL; print(PIL.__version__)'").strip
+    system libexec/"bin/python", "-c", 'from PIL import features; assert features.check("raqm")'
   end
 end
