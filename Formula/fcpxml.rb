@@ -3,13 +3,13 @@
 # Architecture map:
 #   Homebrew native libraries + pinned Apple Silicon Python wheels
 #       -> isolated Python 3.12 virtual environment
-#       -> Bladeworks installed without network dependency resolution
+#       -> Bladeworks FCPXML installed without network dependency resolution
 #       -> formula tests verify ffprobe, Pillow, and RAQM before release
-class Bladeworks < Formula
+class Fcpxml < Formula
   include Language::Python::Virtualenv
 
   desc "Render portable Final Cut Pro XML projects to video"
-  homepage "https://github.com/bladeworks-ai/bladeworks"
+  homepage "https://github.com/bladeworks-ai/fcpxml"
   url "https://files.pythonhosted.org/packages/07/ec/9c392032b46bdcc071495d1bf0612f795ed423ac1cc37528c3a6217016ab/bladeworks-0.1.4.tar.gz"
   sha256 "d43812f3847b92dda19de7a53f0f224db522375562d3bf7235bf61ea7d69e882"
   license "AGPL-3.0-only"
@@ -225,11 +225,16 @@ class Bladeworks < Formula
         venv.pip_install wheel
       end
     end
-    venv.pip_install_and_link buildpath, build_isolation: false
+    venv.pip_install buildpath, build_isolation: false
+    (bin/"fcpxml").write <<~EOS
+      #!/bin/bash
+      exec "#{libexec}/bin/python" -m bladeworks "$@"
+    EOS
+    (bin/"fcpxml").chmod 0755
   end
 
   test do
-    output = shell_output("#{bin}/bladeworks doctor")
+    output = shell_output("#{bin}/fcpxml doctor")
     assert_match "ffprobe: OK (#{formula_opt_bin("ffmpeg")}/ffprobe)", output
     assert_equal "12.2.0", shell_output("#{libexec}/bin/python -c 'import PIL; print(PIL.__version__)'").strip
     system libexec/"bin/python", "-c", 'from PIL import features; assert features.check("raqm")'
