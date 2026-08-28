@@ -10,8 +10,8 @@ class Fcpxml < Formula
 
   desc "Render portable Final Cut Pro XML projects to video"
   homepage "https://github.com/bladeworks-ai/fcpxml"
-  url "https://files.pythonhosted.org/packages/07/ec/9c392032b46bdcc071495d1bf0612f795ed423ac1cc37528c3a6217016ab/bladeworks-0.1.4.tar.gz"
-  sha256 "d43812f3847b92dda19de7a53f0f224db522375562d3bf7235bf61ea7d69e882"
+  url "https://github.com/bladeworks-ai/fcpxml/archive/refs/tags/v0.1.5.tar.gz"
+  sha256 "89760073e29ce53fd85e529cad9cb85cae8d43ca6941e0311a7708924282817b"
   license "AGPL-3.0-only"
 
   depends_on arch: :arm64
